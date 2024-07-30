@@ -26,23 +26,24 @@ stages:
 
     - script: |
         terraform plan
-      displayName: 'Terraform Plan'
+      displayName: 'Terraform Plan -out=tfplan'
 
-# - stage: Apply
-#   displayName: 'Apply Terraform Changes'
-#   dependsOn: Plan
-#   jobs:
-#   - deployment: TerraformApply
-#     displayName: 'Terraform Apply'
-#     # environment: 'approval and checks' 
-#     environment: 'test' 
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - script: |
-#               terraform apply -auto-approve
-#             displayName: 'Terraform Apply'
+- stage: Apply
+  displayName: 'Apply Terraform Changes'
+  dependsOn: Plan
+  jobs:
+  - deployment: TerraformApply
+    displayName: 'Terraform Apply'
+    # environment: 'approval and checks' 
+    environment: 'test' 
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: |
+              terraform init -backend-config="storage_account_name=$(storageAccountName)" -backend-config="container_name=$(containerName)" -backend-config="key=$(key)" -backend-config="access_key=$(accessKey)"
+              terraform apply -auto-approve tfplan
+            displayName: 'Terraform Apply'
 
 # - stage: Deploy
 #   displayName: 'Terraform Apply'
