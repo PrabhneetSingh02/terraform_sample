@@ -35,6 +35,7 @@ stages:
   - deployment: TerraformApply
     displayName: 'Terraform Apply'
     # environment: 'approval and checks' 
+    environment: 'test' 
     strategy:
       runOnce:
         deploy:
