@@ -28,6 +28,21 @@ stages:
         terraform plan
       displayName: 'Terraform Plan'
 
+- stage: Apply
+  displayName: 'Apply Terraform Changes'
+  dependsOn: Plan
+  jobs:
+  - deployment: TerraformApply
+    displayName: 'Terraform Apply'
+    environment: 'approval and checks' 
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: |
+              terraform apply -auto-approve
+            displayName: 'Terraform Apply'
+
 # - stage: Deploy
 #   displayName: 'Terraform Apply'
 #   jobs:
