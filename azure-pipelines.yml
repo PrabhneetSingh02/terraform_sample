@@ -22,11 +22,12 @@ stages:
     - script: |
         terraform --version
         terraform init -backend-config="storage_account_name=$(storageAccountName)" -backend-config="container_name=$(containerName)" -backend-config="key=$(key)" -backend-config="access_key=$(accessKey)"
+        terraform plan -out=tfplan
       displayName: 'Terraform Init'
 
-    - script: |
-        terraform plan
-      displayName: 'Terraform Plan -out=tfplan'
+    # - script: |
+    #     terraform plan
+    #   displayName: 'Terraform Plan '
 
 - stage: Apply
   displayName: 'Apply Terraform Changes'
