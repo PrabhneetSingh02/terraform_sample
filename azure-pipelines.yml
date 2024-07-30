@@ -6,23 +6,26 @@ pool:
 
 stages:
 - stage: Plan
-  displayName: 'Terraform Plan'
+  displayName: 'Resource Deployment - TF'
   jobs:
   - job: TerraformPlan
-    displayName: 'Terraform Plan'
+    displayName: 'Terraform Init & Plan'
     steps:
     - script: |
         #!/bin/bash
-        curl -O https://releases.hashicorp.com/terraform/1.0.11/terraform_1.0.11_linux_amd64.zip
-        unzip terraform_1.0.11_linux_amd64.zip
-        sudo mv terraform /usr/local/bin/
+        wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+        sudo apt update && sudo apt install terraform
       displayName: 'Install Terraform'
 
     - script: |
         terraform --version
-        terraform init -backend-config="storage_account_name=$(storageAccountName)" -backend-config="container_name=$(containerName)" -backend-config="key=$(key)" -backend-config="access_key=$(accessKey)"
+        terraform init
+      displayName: 'Terraform Init'
+
+    - script: |
         terraform plan
-      displayName: 'Terraform Init and Plan'
+      displayName: 'Terraform Plan'
 
 # - stage: Deploy
 #   displayName: 'Terraform Apply'
