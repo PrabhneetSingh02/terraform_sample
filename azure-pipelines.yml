@@ -47,8 +47,11 @@ stages:
       runOnce:
         deploy:
           steps:
-          - download: current
-            artifact: tfplan
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: 'current'
+              artifactName: 'tfplan'
+              targetPath: '$(Pipeline.Workspace)'
           - script: |
               ls -la $(System.DefaultWorkingDirectory)/tfplan
           # - script: |
