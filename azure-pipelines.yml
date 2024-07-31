@@ -54,10 +54,10 @@ stages:
               targetPath: '$(Pipeline.Workspace)/tfplan'
           - script: |
               ls -la $(Pipeline.Workspace)/tfplan
-          # - script: |
-          #     terraform init -backend-config="storage_account_name=$(storageAccountName)" -backend-config="container_name=$(containerName)" -backend-config="key=$(key)" -backend-config="access_key=$(accessKey)"
-          #     terraform apply -auto-approve tfplan
-          #   displayName: 'Terraform Apply'
+          - script: |
+              terraform init -backend-config="storage_account_name=$(storageAccountName)" -backend-config="container_name=$(containerName)" -backend-config="key=$(key)" -backend-config="access_key=$(accessKey)"
+              terraform apply -auto-approve $(System.DefaultWorkingDirectory)/tfplan/tfplan
+            displayName: 'Terraform Apply'
 
 # - stage: Deploy
 #   displayName: 'Terraform Apply'
