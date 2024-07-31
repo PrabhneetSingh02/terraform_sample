@@ -27,7 +27,7 @@ stages:
     
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)/tfplan'
+        targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)'
         artifact: 'tfplan'
         publishLocation: 'pipeline'
 
@@ -51,9 +51,9 @@ stages:
             inputs:
               buildType: 'current'
               artifactName: 'tfplan'
-              targetPath: '$(Pipeline.Workspace)'
+              targetPath: '$(Pipeline.Workspace)/artifacts'
           - script: |
-              ls -la $(System.DefaultWorkingDirectory)/tfplan
+              ls -la $(Pipeline.Workspace)/artifacts
           # - script: |
           #     terraform init -backend-config="storage_account_name=$(storageAccountName)" -backend-config="container_name=$(containerName)" -backend-config="key=$(key)" -backend-config="access_key=$(accessKey)"
           #     terraform apply -auto-approve tfplan
